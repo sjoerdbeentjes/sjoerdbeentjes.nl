@@ -2,13 +2,10 @@ import fs from 'node:fs/promises'
 import { load } from 'cheerio';
 
 const fetchHtml = async (url: string) => {
-  try {
-    const response = await fetch(url);
-    const html = await response.text();
-    return html;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await fetch(url);
+  const html = await response.text();
+
+  return html;
 }
 
 const scrapeArticles = async () => {
