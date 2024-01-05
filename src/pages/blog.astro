@@ -1,0 +1,26 @@
+---
+import DefaultLayout from "../layouts/default.astro";
+import articles from "../data/articles.json";
+---
+
+<DefaultLayout>
+  <h1>Blog</h1>
+
+  {
+    articles.map((article) => (
+      <article class="excerpt">
+        <img src={article.imgUrl} alt="" />
+        <a href={article.url}>
+          <h2>{article.title}</h2>
+        </a>
+        <p>{article.excerpt}</p>
+      </article>
+    ))
+  }
+</DefaultLayout>
+
+<style>
+  .excerpt {
+    max-width: 30rem;
+  }
+</style>
