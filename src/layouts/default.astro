@@ -8,7 +8,7 @@ const { title } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{title} | Sjoerd Beentjes</title>
   </head>
   <body>
     <AppHeader />
@@ -19,15 +19,24 @@ const { title } = Astro.props;
   </body>
 </html>
 
-<style>
+<style is:global>
   * {
     box-sizing: border-box;
+  }
+
+  html, body {
+    font-size: 16px;
+  }
+
+  p {
+    max-width: 30rem;
   }
 
   body {
     padding: 0;
     margin: 0;
   }
+
 
   .default-layout__main {
     padding: 0 1rem;

@@ -1,15 +1,18 @@
 ---
 import DefaultLayout from "../layouts/default.astro";
 import articles from "../data/articles.json";
+import { Image } from 'astro:assets';
+
+const images = import.meta.glob('../data/images/*.png')
 ---
 
-<DefaultLayout>
+<DefaultLayout title="Blog">
   <h1>Blog</h1>
 
   {
     articles.map((article) => (
       <article class="excerpt">
-        <img src={article.imgUrl} alt="" />
+        <Image src={images[`../data/images/${article.imageName}`]()} alt="" width="400" />
         <a href={article.url}>
           <h2>{article.title}</h2>
         </a>
