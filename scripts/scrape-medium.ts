@@ -29,7 +29,7 @@ const handleImage = async (imgUrl: string) => {
 
     const imageBuffer = await response.arrayBuffer();
 
-    const imagesDir = 'src/data/images';
+    const imagesDir = `${dataDir}/images`;
     await fs.mkdir(imagesDir, { recursive: true });
 
     const imagePath = `${imagesDir}/${imageName}`;
