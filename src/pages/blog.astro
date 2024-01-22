@@ -3,7 +3,18 @@ import DefaultLayout from "../layouts/default.astro";
 import articles from "../data/articles.json";
 import { Image } from 'astro:assets';
 
-const images = import.meta.glob('../data/images/*.png')
+const images = import.meta.glob<{ default: ImageMetadata}>('../data/images/*.png');
+
+function getImage(name: string) {
+  const image = images[`../data/images/${name}`];
+
+  if (!image) {
+    throw new Error(`Image ${name} not found`);
+  }
+
+  return image();
+}
+
 ---
 
 <DefaultLayout title="Blog">
@@ -12,7 +23,7 @@ const images = import.meta.glob('../data/images/*.png')
   {
     articles.map((article) => (
       <article class="excerpt">
-        <Image src={images[`../data/images/${article.imageName}`]()} alt="" width="400" />
+        <Image src={getImage(article.imageName)} alt="" width="480" />
         <a href={article.url}>
           <h2>{article.title}</h2>
         </a>
@@ -25,5 +36,9 @@ const images = import.meta.glob('../data/images/*.png')
 <style>
   .excerpt {
     max-width: 30rem;
+  }
+
+  .excerpt:not(:last-child) {
+    margin-bottom: 32px;
   }
 </style>
