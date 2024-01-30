@@ -1,28 +1,20 @@
-import fs from 'node:fs/promises';
-import { load } from 'cheerio';
+import fs from "node:fs/promises";
+import { Window } from "happy-dom";
 
-const dataDir = 'src/data';
+const profileUrl = "https://medium.com/@sjoerd3000";
+const dataDir = "src/data";
 
-const fetchHtml = async (url: string) => {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.text();
-  } catch (error) {
-    console.error(`Error fetching HTML from ${url}:`, error);
-    throw error;
-  }
+const formatArticleUrl = (path: string) => {
+  return `https://medium.com${path?.split("?")[0]}`;
 };
 
-const handleImage = async (imgUrl: string) => {
+const downloadImage = async (imgUrl: string) => {
   try {
-    const imageName = imgUrl.split('/').pop()?.split('?')[0] || '';
-    const originalImageUrl = imgUrl.replace('resize:fill:224:224/', '');
+    const imageName = imgUrl.split("/").pop()?.split("?")[0] || "";
+    const originalImageUrl = imgUrl.replace("resize:fill:224:224/", "");
 
     const response = await fetch(originalImageUrl);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -42,43 +34,35 @@ const handleImage = async (imgUrl: string) => {
   }
 };
 
-const scrapeArticles = async () => {
-  try {
-    const url = 'https://medium.com/@sjoerd3000';
-    const html = await fetchHtml(url);
-    const $ = load(html);
-    const articleElements = $('article')
+const profileHtml = await fetch(profileUrl).then((res) => res.text());
 
-    const articles = await Promise.all(articleElements.map(async (_, element) => {
-      const title = $(element).find('h2').text();
-      const excerpt = $($(element).find('p').get(1)).text();
-      const path = $(element).find('a').attr('href');
-      const articleUrl = `https://medium.com${path?.split('?')[0]}`;
-      const imgUrl = $(element).find('img').attr('src');
-  
-      if (imgUrl) {
-        const imageName = await handleImage(imgUrl);
-  
-        return {
-          url: articleUrl,
-          title,
-          excerpt,
-          imageName,
-        };
-      } else {
-        return {
-          url: articleUrl,
-          title,
-          excerpt,
-        };
-      }
-    }));
+const window = new Window();
+const document = window.document;
 
-    await fs.mkdir(dataDir, { recursive: true });
-    await fs.writeFile(`${dataDir}/articles.json`, JSON.stringify(articles, null, 2));
-  } catch (error) {
-    console.error('Error scraping articles:', error);
-  }
-};
+document.body.innerHTML = profileHtml;
 
-scrapeArticles().then(() => console.log('Scraping completed.'));
+const articleElements = document.querySelectorAll("article");
+
+const articles = await Promise.all(
+  articleElements.map(async (element) => {
+    const title = element.querySelector("h2")?.textContent;
+    const excerpt = element.querySelectorAll("p")[1]?.textContent;
+    const path = element.querySelector("a")?.getAttribute("href");
+    const url = path ? formatArticleUrl(path) : null;
+    const imageUrl = element.querySelector("img")?.getAttribute("src");
+    const imageName = imageUrl ? await downloadImage(imageUrl) : null;
+
+    return {
+      title,
+      excerpt,
+      path,
+      url,
+      imageUrl,
+      imageName,
+    };
+  })
+);
+
+fs.writeFile(`${dataDir}/articles.json`, JSON.stringify(articles, null, 2))
+  .then(() => console.log("Articles saved!"))
+  .catch((error) => console.error("Error saving articles:", error));

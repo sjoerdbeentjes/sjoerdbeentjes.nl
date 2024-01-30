@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "prepare": "npm run scrape-medium",
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "npm run scrape-medium",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -14,7 +14,7 @@
   "dependencies": {
     "@astrojs/check": "^0.3.3",
     "astro": "^4.0.6",
-    "cheerio": "^1.0.0-rc.12",
+    "happy-dom": "^13.2.1",
     "typescript": "^5.3.3",
     "vite-node": "^1.0.4"
   },
