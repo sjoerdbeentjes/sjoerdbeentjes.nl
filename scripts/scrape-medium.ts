@@ -11,6 +11,9 @@ const formatArticleUrl = (path: string) => {
 const downloadImage = async (imgUrl: string) => {
   try {
     const imageName = imgUrl.split("/").pop()?.split("?")[0] || "";
+    const imageFileName = imageName.endsWith(".png")
+      ? imageName
+      : `${imageName}.png`;
     const originalImageUrl = imgUrl.replace("resize:fill:224:224/", "");
 
     const response = await fetch(originalImageUrl);
@@ -24,10 +27,10 @@ const downloadImage = async (imgUrl: string) => {
     const imagesDir = `${dataDir}/images`;
     await fs.mkdir(imagesDir, { recursive: true });
 
-    const imagePath = `${imagesDir}/${imageName}`;
+    const imagePath = `${imagesDir}/${imageFileName}`;
     await fs.writeFile(imagePath, Buffer.from(imageBuffer));
 
-    return imageName;
+    return imageFileName;
   } catch (error) {
     console.error(`Error handling image ${imgUrl}:`, error);
     throw error;
