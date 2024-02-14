@@ -18,27 +18,60 @@ function getImage(name: string) {
 ---
 
 <DefaultLayout title="Blog">
-  <h1>Blog</h1>
+  <h1 class="page-title">Blog</h1>
 
-  {
-    articles.map((article) => (
-      <article class="excerpt">
-        <Image src={getImage(article.imageName)} alt="" width="480" format="webp" />
-        <a href={article.url}>
-          <h2>{article.title}</h2>
-        </a>
-        <p>{article.excerpt}</p>
-      </article>
-    ))
-  }
+  <ul class="excerpt-list">
+    {
+      articles.map((article) => (
+        <li class="excerpt-list__item">
+          <article class="excerpt">
+            <Image
+              class="excerpt__image"
+              src={getImage(article.imageName)}
+              alt=""
+              width="640"
+              format="webp"
+            />
+            <a href={article.url}>
+              <h2>{article.title}</h2>
+            </a>
+            <p>{article.excerpt}</p>
+          </article>
+        </li>
+      ))
+    }
+  </ul>
+
 </DefaultLayout>
 
 <style>
-  .excerpt {
-    max-width: 30rem;
+  
+  .excerpt-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  
+  .excerpt-list__item a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
-  .excerpt:not(:last-child) {
-    margin-bottom: 32px;
+  .excerpt {
+    max-width: 30rem;
+    position: relative;
+  }
+
+  .excerpt__image {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
   }
 </style>

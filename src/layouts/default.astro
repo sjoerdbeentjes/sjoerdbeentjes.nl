@@ -26,10 +26,11 @@ const { title } = Astro.props;
 
   html, body {
     font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
   }
 
   p {
-    max-width: 30rem;
+    max-width: 40rem;
   }
 
   body {
@@ -38,7 +39,7 @@ const { title } = Astro.props;
   }
 
   a {
-    color: #5ba9dd;
+    color: #005f9e;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -50,13 +51,15 @@ const { title } = Astro.props;
     a {
       color: #5ba9dd;
     }
+  }
 
-    a:visited {
-      color: #bca2e8;
-    }
+  .page-title {
+    margin: 32px 0 24px;
   }
 
   .default-layout__main {
     padding: 0 1rem;
+    max-width: 40rem;
+    margin: 0 auto;
   }
 </style>
