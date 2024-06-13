@@ -49,10 +49,11 @@ const articleElements = document.querySelectorAll("article");
 const articles = await Promise.all(
   articleElements.map(async (element) => {
     const title = element.querySelector("h2")?.textContent;
-    const excerpt = element.querySelectorAll("p")[1]?.textContent;
+    const excerpt = element.querySelector("h3")?.textContent;
     const path = element.querySelector("a")?.getAttribute("href");
     const url = path ? formatArticleUrl(path) : null;
-    const imageUrl = element.querySelector("img")?.getAttribute("src");
+    const imageUrl = element.querySelectorAll("img")[1]?.getAttribute("src");
+    console.log({ imageUrl })
     const imageName = imageUrl ? await downloadImage(imageUrl) : null;
 
     return {

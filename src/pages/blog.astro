@@ -8,6 +8,8 @@ const images = import.meta.glob<{ default: ImageMetadata}>('../data/images/*.png
 function getImage(name: string) {
   const image = images[`../data/images/${name}`];
 
+  console.log(image)
+
   if (!image) {
     throw new Error(`Image ${name} not found`);
   }
