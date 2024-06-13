@@ -67,6 +67,8 @@ const articles = await Promise.all(
   })
 );
 
+await fs.mkdir(dataDir, { recursive: true });
+
 fs.writeFile(`${dataDir}/articles.json`, JSON.stringify(articles, null, 2))
   .then(() => console.log("Articles saved!"))
   .catch((error) => console.error("Error saving articles:", error));
